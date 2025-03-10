@@ -67,7 +67,6 @@ def evaluate_task(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, task_n
 
     return accuracies, tv_ordered_tokens_by_layer
 
-
 def run_main_experiment(
     model_type: str,
     model_variant: str,
@@ -136,7 +135,6 @@ def get_new_experiment_id() -> str:
     return str(
         max([int(results_dir) for results_dir in os.listdir(MAIN_RESULTS_DIR) if results_dir.isdigit()] + [0]) + 1
     )
-
 
 def main():
     if len(sys.argv) == 1:
