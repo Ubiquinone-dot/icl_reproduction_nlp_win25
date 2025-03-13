@@ -105,8 +105,12 @@ def load_model(model_type: str, model_variant: str, load_to_cpu: bool = False):
     kwargs = CPU_KWARGS if load_to_cpu else GPU_KWARGS
 
     kwargs["device_map"] = _create_device_map(model_path)
+    print("Loading model with kwargs:", kwargs)
 
-    model = AutoModelForCausalLM.from_pretrained(model_path, **kwargs)
+    model = AutoModelForCausalLM.from_pretrained(
+        model_path,
+        **kwargs
+    )
     model = model.eval()  # check if this is necessary
 
     return model
@@ -138,10 +142,13 @@ MODEL_PATHS = {
         "12B": "EleutherAI/pythia-12b",
     },
     "llama": {
-        "7B": llama_local_path("huggingface", "7B"),
-        "13B": llama_local_path("huggingface", "13B"),
-        "30B": llama_local_path("huggingface", "30B"),
-        "65B": llama_local_path("huggingface", "65B"),
+        "7B": "meta-llama/Llama-2-7b",
+        "13B": "meta-llama/Llama-2-13b",
+        "30B": "meta-llama/Llama-2-30b",
+        # "7B": llama_local_path("huggingface", "7B"),
+        # "13B": llama_local_path("huggingface", "13B"),
+        # "30B": llama_local_path("huggingface", "30B"),
+        # "65B": llama_local_path("huggingface", "65B"),
     },
     "falcon": {
         "7B": "tiiuae/falcon-7b",

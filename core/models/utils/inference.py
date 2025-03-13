@@ -70,9 +70,6 @@ def get_input_type(inputs: Dict) -> str:
 def _get_forward_kwargs(forward_kwargs: Optional[Dict] = None) -> Dict:
     forward_kwargs = forward_kwargs or {}
 
-    # forward_kwargs.setdefault("output_hidden_states", True)
-    # forward_kwargs.setdefault("output_attentions", True)
-
     return forward_kwargs
 
 
@@ -105,6 +102,8 @@ def batch_forward(
     outputs = []
     for batch_inputs in batches:
         batch_inputs = nested_apply(batch_inputs, lambda t: t.to(device))
+        if 'past_key_values' in forward_kwargs and forward_kwargs['past_key_values'] is not None:
+            forward_kwargs['past_key_values'] = tuple(tuple(past_tensor.to(device) for past_tensor in layer) for layer in forward_kwargs['past_key_values'])
 
         with torch.no_grad():
             out = model(**batch_inputs, **forward_kwargs)
@@ -150,7 +149,9 @@ def batch_generate(
 
     generate_ids = []
     for batch_inputs in batches:
-        batch_inputs = nested_apply(batch_inputs, lambda t: t.to("cpu"))
+        # batch_inputs = nested_apply(batch_inputs, lambda t: t.to("cpu"))
+        batch_inputs = nested_apply(batch_inputs, lambda t: t.to(device))
+        # nested_apply(batch_inputs, lambda t: print(t.device, device))
 
         batch_ids = model.generate(
             **batch_inputs,

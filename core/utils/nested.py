@@ -1,5 +1,7 @@
 import collections.abc
 
+# from transformers.cache_utils import DynamicCache
+
 import torch
 
 
@@ -13,20 +15,21 @@ def nested_apply(obj, func):
     else:
         return func(obj)
 
-
 def is_mapping(obj):
     return hasattr(obj, "items")
 
-
 def is_iterable(obj):
     return isinstance(obj, (list, tuple))
-
 
 def nested_concat(obj_list):
     first_item = obj_list[0]
 
     if isinstance(first_item, torch.Tensor):
         return torch.cat(obj_list)
+    # elif isinstance(first_item, DynamicCache):
+    #     return first_item
+        # return first_item.to_legacy_cache()
+        # return nested_concat(first_item.to_legacy_cache())
     elif is_mapping(first_item):
         keys = first_item.keys()
         return {key: nested_concat([d[key] for d in obj_list]) for key in keys}
@@ -34,4 +37,4 @@ def nested_concat(obj_list):
         length = len(first_item)
         return type(first_item)([nested_concat([d[i] for d in obj_list]) for i in range(length)])
     else:
-        raise ValueError(f"Unhandled data type: {type(first_item)}")
+        raise ValueError(f"Unhandled data type: {type(first_item), first_item}")

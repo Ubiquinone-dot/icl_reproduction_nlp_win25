@@ -4,7 +4,7 @@
 #SBATCH --nodes 1
 #SBATCH --gres=gpu:l40:2
 #SBATCH --ntasks-per-node 2
-#SBATCH --mem 128gb
+#SBATCH --mem 256gb
 #SBATCH -c 4
 #SBATCH --time=7-0
 #SBATCH --output=logs/llm_%J.log
@@ -26,7 +26,6 @@ if [ -z "$script_name" ]; then
     echo "Using default script arg"
     script_name=experiments.main
 fi
-
 script_full_path="scripts.$script_name"
 
 ./stop_script.sh $1
@@ -43,12 +42,13 @@ echo "Starting: $script_full_path"
 LLAMA_DIR=/net/scratch/jbutch/nlp/models
 # img=/home/jbutch/Projects/HT25/memprofiler/container.sif
 export LLAMA_DIR=$LLAMA_DIR
+export HF_HOME=$HF_HOME
 
 # Activate your conda environment
 export PYTHONPATH=/home/jbutch/Projects/HT25/icl_repro:$PYTHONPATH
 source /software/conda/etc/profile.d/conda.sh
 eval "$(conda shell.bash hook)"
-conda activate icl
+conda activate icl_task_vectors
 srun --kill-on-bad-exit python -u -m $script_full_path
 
 # nohup python -u -m $script_full_path > $log_file 2>&1 &
