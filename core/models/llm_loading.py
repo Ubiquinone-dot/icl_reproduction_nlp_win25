@@ -39,8 +39,8 @@ def llama_local_path(variant: LlamaVariant, size: LlamaSize) -> str:
 
 
 def get_local_path(model_type: str, model_variant: str) -> str:
-    if model_type == "llama":
-        return llama_local_path("huggingface", model_variant)
+    # if model_type == "llama":
+    #     return llama_local_path("huggingface", model_variant)
 
     model_path = get_model_path(model_type, model_variant)
     username, model_name = model_path.split("/")

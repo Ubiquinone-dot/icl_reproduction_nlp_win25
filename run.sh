@@ -43,6 +43,7 @@ LLAMA_DIR=/net/scratch/jbutch/nlp/models
 # img=/home/jbutch/Projects/HT25/memprofiler/container.sif
 export LLAMA_DIR=$LLAMA_DIR
 export HF_HOME=$HF_HOME
+export TRANSFORMERS_CACHE='/net/scratch/jbutch/hf/cache/hub'
 
 # Activate your conda environment
 export PYTHONPATH=/home/jbutch/Projects/HT25/icl_repro:$PYTHONPATH
